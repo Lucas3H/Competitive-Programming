@@ -72,24 +72,19 @@ NodeSP  * splay(NodeSP  * a, NodeSP  * topo, bool isRoot = true){
 	return a;
 }
 
-NodeSP  * search(NodeSP  * a, int val, int & acessados){
+NodeSP  * search(NodeSP  * a, int val){
 	if(a == nullptr) return nullptr;
 	
-	acessados++;
-
 	if(a->val == val)
 		return a;
 	if(a->val > val)
-		return search(a->l, val, acessados);
+		return search(a->l, val);
 	else 
-		return search(a->r, val, acessados);
+		return search(a->r, val);
 }
 
 bool searchSplay(NodeSP  ** a, int val){
-	int acessados = 0;
-	NodeSP  * aux = search(*a, val, acessados);
-
-	std::cout << "Nós acessados: " << acessados << std::endl;
+	NodeSP  * aux = search(*a, val);
 
 	if(aux != nullptr) {
 		*a = splay(*a, aux);
@@ -98,29 +93,26 @@ bool searchSplay(NodeSP  ** a, int val){
 	else return false;
 }
 
-NodeSP  * insere(NodeSP  * a, int val, int & acessados){
+NodeSP  * insere(NodeSP  * a, int val){
 	acessados++;
 	if(a == nullptr) 
 		return new NodeSP (val, nullptr, nullptr);
 	
 	if(a->val > val)
-		a->l = insere(a->l, val, acessados);
+		a->l = insere(a->l, val);
 	else 
-		a->r = insere(a->r, val, acessados);
+		a->r = insere(a->r, val);
 	return a;
 }
 
 NodeSP  * insereSplay(NodeSP  * a, int val){
-	int acessados = 0;
-	a = insere(a, val, acessados);
-	std::cout << "Nós acessados: " << acessados << std::endl;
-	return splay(a, search(a, val, acessados));
+	a = insere(a, val);
+	return splay(a, search(a, val));
 }
 
 
-NodeSP  * deletaRaiz(NodeSP  * root, int & acessados){
+NodeSP  * deletaRaiz(NodeSP  * root){
 	NodeSP  * p, * q;
-	acessados++; // Um dos filhos da raiz certamente é acessado
 	if(root->r == nullptr){
 		p = root->l;
 		delete root;
@@ -130,7 +122,6 @@ NodeSP  * deletaRaiz(NodeSP  * root, int & acessados){
 	// Procura o menor cara na subárovre da direita
 	p = root, q = root->r;
 	while(q->l != nullptr){
-		acessados++;
 		p = q;
 		q = q->l;
 	}
@@ -147,10 +138,8 @@ NodeSP  * deletaRaiz(NodeSP  * root, int & acessados){
 
 NodeSP  * deletaSplay(NodeSP  * a, int val){
 	NodeSP  * root = a, * pai = nullptr; // "it" é o mesmo que o "a" na árvore nova
-	int acessados = 1;
-
+	
 	while(a != nullptr && a->val != val){
-		acessados++;
 		if(a->val > val){
 			pai = a;
 			a = a->l;
@@ -161,15 +150,12 @@ NodeSP  * deletaSplay(NodeSP  * a, int val){
 		}
 	}
 
-	if(a == nullptr){
-		std::cout << "Nós acessados: " << acessados << std::endl;
+	if(a == nullptr)
 		return root;
-	}
-
-	if(pai->l == a) pai->l = deletaRaiz(a, acessados);
-	else pai->r = deletaRaiz(a, acessados);
 	
-	std::cout << "Nós acessados: " << acessados << std::endl;
+
+	if(pai->l == a) pai->l = deletaRaiz(a);
+	else pai->r = deletaRaiz(a);
 
 	return splay(root, pai);
 }
