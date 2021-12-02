@@ -4,6 +4,8 @@
     Complexity: O(n * log n)
     Details: be aware that we must find some primitive root for p prime
     p = 998244353 is the most used prime in these cases
+
+    Based on: https://cp-algorithms.com/algebra/fft.html#toc-tgt-6
 */
 
 namespace NTT {
