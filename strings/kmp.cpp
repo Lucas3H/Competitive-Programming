@@ -13,7 +13,7 @@
 
 template<typename T>
 vector<int> lps_p(T pat){
-	int i = 1, len = 0, tam = pat.size();
+	int i = 1, len = 0, tam = (int)pat.size();
 	vector<int> lps(tam, 0);
 	lps[0] = 0;
 
@@ -28,12 +28,12 @@ vector<int> lps_p(T pat){
 
 template<typename T>
 int check(T txt, T pat){
-	int i = 0, j = 0, tt = txt.size(), tp = pat.size(), ans = 0;
+	int i = 0, j = 0, tt = (int)txt.size(), tp = (int)pat.size(), ans = 0;
 	vector<int> lps = lps_p(pat);
 
 	while(i < tt){
 		if(txt[i] == pat[j]) i++,j++;
-		if(j == tp), ans++, j = lps[j-1];
+		if(j == tp) ans++, j = lps[j-1];
 		else if(i < tt && txt[i] != pat[j]){
 			if(j == 0) i++;
 			else j = lps[j-1];
@@ -42,3 +42,4 @@ int check(T txt, T pat){
 
 	return ans;
 }
+
