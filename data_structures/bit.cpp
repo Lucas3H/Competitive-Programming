@@ -1,10 +1,10 @@
 /*
-    Binary Indexed Tree
+    Binary Indexed Tree(or Fenwick Tree)
 
     Structure to make prefix queries and point updates
 
     Complexity:
-        BIT()         : O(log n)
+        BIT()         : O(n log n)
         update        : O(log n)
         query         : O(log n)
         lower_bound() : O(log n)
@@ -31,20 +31,20 @@ struct BIT{
     }
 
     int query(int i){
-        int sum = 0;
+        int sum = 0; // NEUTRAL: if op=min, use sum=INF
         for(; i > 0; i -= i & (-i)) sum = op(sum, bit[i]);
         return sum;
     }
 
-    /*O(log n)*/
+    // Only makes sense when it is monotonic
     int lower_bound(int v){
-	    int sum = 0, pos = 0;
+        int pos = 0, sum = 0; 
         for(int i = (int)ceil(log2(n)); i >= 0; i--){
             if(pos + (1 << i) < n && op(sum, bit[pos + (1 << i)]) < v){
                 sum = op(sum, bit[pos + (1 << i)]);
                 pos += (1 << i);
             }
         }
-	    return pos + 1; 
+        return pos + 1; 
     } 
 };
