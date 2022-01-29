@@ -16,8 +16,7 @@ typedef vector<vector<double>> matrix;
 	Complexity:
 		- O(n^3)
 */
-template<class T>
-bool inverse (vector<vector<T>> a, vector<vector<T>> & b) {
+bool inverse (matrix a, matrix & b) {
     int n = (int)a.size();
     b.resize(n);
     for(int i = 0; i < n; i++) b[i].resize(n), b[i][i] = 1;
@@ -47,11 +46,26 @@ bool inverse (vector<vector<T>> a, vector<vector<T>> & b) {
 	return true;
 }
 
+
+/*
+    Matrix exponentiation
+*/
+template<class T>
+matrix fastxp(matrix a, ll e){
+    if(e == 1) return a;
+    matrix b = fastxp(a, e/2);
+    b = b * b;
+    if(e%2 == 1) b=b*a;
+
+    return b;
+}
+
+
 /*
 	Determinant
 */
 template<class T>
-T determinant(vector<vector<T>> a) {
+T determinant(matrix a) {
     int n = (int)a.size();
     T ret = 1;
 
@@ -83,10 +97,10 @@ T determinant(vector<vector<T>> a) {
 }
 
 template<class T>
-vector<vector<T>> operator * (vector<vector<T>> & a, vector<vector<T>> & b){
+matrix operator * (matrix & a, matrix & b){
 	int n = a.size(), m = b[0].size();
 	if(a[0].size() != b.size()) assert(0);
-	vector<vector<T>> ret;
+	matrix ret;
 	ret.resize(a.size());
 
 	for(int i = 0; i < n; i++){
@@ -101,10 +115,10 @@ vector<vector<T>> operator * (vector<vector<T>> & a, vector<vector<T>> & b){
 }
 
 template<class T>
-vector<vector<T>> operator + (vector<vector<T>> & a, vector<vector<T>> & b){
+matrix operator + (matrix & a, matrix & b){
 	int n = a.size(), m = a[0].size();
 	if(n != b.size() || m != b[0].size()) assert(0);
-	vector<vector<T>> ret(n)
+	matrix ret(n)
 	for(int i = 0; i < n; i++){
 		ret[i].resize(m, 0);
 		for(int j = 0; j < m; j++) ret[i][j] = a[i][j] + b[i][j];
@@ -113,10 +127,10 @@ vector<vector<T>> operator + (vector<vector<T>> & a, vector<vector<T>> & b){
 }
 
 template<class T>
-vector<vector<T>> operator - (vector<vector<T>> & a, vector<vector<T>> & b){
+matrix operator - (matrix & a, matrix & b){
 	int n = a.size(), m = a[0].size();
 	if(n != b.size() || m != b[0].size()) assert(0);
-	vector<vector<T>> ret(n)
+	matrix ret(n)
 	for(int i = 0; i < n; i++){
 		ret[i].resize(m, 0);
 		for(int j = 0; j < m; j++) ret[i][j] = a[i][j] - b[i][j];
