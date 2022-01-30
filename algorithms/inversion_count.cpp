@@ -1,90 +1,27 @@
-// https://www.spoj.com/problems/INVCNT/
+/*
+    Inversion count using merge sort
 
-#include<bits/stdc++.h>
+    Description: count the number of inversions in a given vector
 
-using namespace std;
+    Complexity: O(n log n)
+*/
 
-#define fr(i, n) for(ll i = 0; i < n; i++)
-#define frr(i, n) for(ll i = 1; i <= n; i++)
-#define frm(i, n) for(ll i = n-1; i >= 0; i--)
+template<typename T>
+long long merge_sort(vector<T> & v){
+    if(v.size() <= 1) return 0;
+    long long n = v.size(), ans = 0;
+    vector<T> l(v.begin(), v.begin() + n / 2), r(v.begin() + n / 2, v.end());
+    v.clear();
+    ans += merge_sort(l) + merge_sort(r);
 
-#define pb push_back
-#define f first
-#define s second
-
-typedef long long ll;
-typedef pair<int,int> pii;
-typedef pair<int, int> ponto;
-typedef vector<vector<ll>> matrix;
-
-#define mem(v, k) memset(v, k, sizeof(v));
-
-#define db cout << "Debug" << endl;
-
-#define mp make_pair
-#define pq priority_queue
-
-#define mx(a, b) a = max(a, b);
-#define mod(a, b) a = a%b;
-
-#define MAXN 100010
-#define MOD 1000000007
-
-map<ll, ll> m;
-set<ll> s;
-ll bit[4*MAXN], v[4*MAXN];
-ll n;
-
-void update(ll i, ll v){
-    while(i <= n){
-        bit[i]+=v;
-        i += i &(-i);
-    }
-}
-
-ll query(ll i){
-    ll sum = 0;
-    while(i > 0){
-        sum += bit[i];
-        i -= i&(-i);
-    }
-
-    return sum;
-}
-
-ll build(){
-    fr(i, n+1) bit[i] = 0;
-
-    ll inv = 0;
-    frr(i, n) {
-        inv += i - (ll)1 - query(m[v[i]]);
-        update(m[v[i]], (ll)1);
-    }
-
-    return inv;
-}
-
-int main(){
-	ios::sync_with_stdio(false);
-    int t;
-    cin >> t;
-
-    while(t--){
-        m.clear();
-        s.clear();
-
-        cin >> n;
-        frr(i, n){
-            cin >> v[i];
-            s.insert(v[i]);
+    long long il = 0, ir = 0;
+    while(il < l.size() || ir < r.size()){
+        if(il == l.size()) v.push_back(r[ir++]);
+        else if(ir == r.size()) v.push_back(l[il++]);
+        else {
+            if(l[il] < r[ir]) v.push_back(l[il++]);
+            else v.push_back(r[ir++]), ans += l.size() - il;
         }
-
-        ll i = (ll)1;
-        for(auto x: s) m[x] = i++;
-
-        //for(auto x: s) cout <<x  << " " << m[x] << endl;
-
-        cout << build() << endl;
-    }
-
+    } 
+    return ans;
 }
